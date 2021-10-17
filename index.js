@@ -36,8 +36,9 @@ client.on('interactionCreate', async interaction => {
   try {
     await command.execute(interaction);
   } catch (error) {
-    if (error.response.data.error) return interaction.reply({ content: 'That anime is not available. Check this link for all of the available anime! https://docs.google.com/document/d/19YuCEnYsE74cYIs0yOhY4LvZIrjwUnYqHmJztUA0aGQ/edit?usp=sharing', ephemeral: true });
-    else {
+    if (error.response) {
+      if (error.response.data.error) return interaction.reply({ content: 'That anime is not available. Check this link for all of the available anime! https://docs.google.com/document/d/19YuCEnYsE74cYIs0yOhY4LvZIrjwUnYqHmJztUA0aGQ/edit?usp=sharing', ephemeral: true });
+    } else {
       console.error(error);
       await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
