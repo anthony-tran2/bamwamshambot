@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
 dotenv.config();
-const { Client, Intents, Collection } = require('discord.js');
+const { Client, Intents, Collection, MessageEmbed } = require('discord.js');
 const fs = require('fs');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 const { REST } = require('@discordjs/rest');
@@ -50,7 +50,14 @@ client.on('interactionCreate', async interaction => {
     await command.execute(interaction);
   } catch (error) {
     if (error.response) {
-      if (error.response.data.error) return interaction.reply({ content: 'That anime is not available. Check this link for all of the available anime! https://docs.google.com/document/d/19YuCEnYsE74cYIs0yOhY4LvZIrjwUnYqHmJztUA0aGQ/edit?usp=sharing', ephemeral: true });
+      if (error.response.data.error) {
+        const embed = await new MessageEmbed()
+          .setColor('#0099ff')
+          .setTitle('List of Anime')
+          .setURL('https://docs.google.com/document/d/19YuCEnYsE74cYIs0yOhY4LvZIrjwUnYqHmJztUA0aGQ/edit?usp=sharing')
+          .setDescription('List of available anime for anime quotes.');
+        return interaction.reply({ content: 'That anime is not available. Check this link for all of the available anime!', ephemeral: true, embeds: [embed] });
+      }
     } else {
       console.error(error);
       await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
