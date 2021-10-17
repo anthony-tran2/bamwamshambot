@@ -2,12 +2,10 @@ const dotenv = require('dotenv');
 dotenv.config();
 const { Client, Intents, Collection } = require('discord.js');
 const fs = require('fs');
-// const axios = require('axios');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 client.commands = new Collection();
 
-// const functions = fs.readdirSync('./functions').filter(file => file.endsWith('.js'));
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -38,8 +36,11 @@ client.on('interactionCreate', async interaction => {
   try {
     await command.execute(interaction);
   } catch (error) {
-    console.error(error);
-    await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+    if (error.response.data.error) return interaction.reply({ content: 'That anime is not available. Check this link for all of the available anime! https://docs.google.com/document/d/19YuCEnYsE74cYIs0yOhY4LvZIrjwUnYqHmJztUA0aGQ/edit?usp=sharing', ephemeral: true });
+    else {
+      console.error(error);
+      await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+    }
   }
 });
 

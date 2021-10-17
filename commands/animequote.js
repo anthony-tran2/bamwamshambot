@@ -21,7 +21,6 @@ module.exports = {
   async execute(selection) {
     if (selection.options._subcommand === 'select') {
       const response = await axios.get(`https://animechan.vercel.app/api/quotes/anime?title=${encodeURIComponent(selection.options._hoistedOptions[0].value)}`);
-      if (!response.status === 404) return await selection.reply({ content: 'That anime is not available. Check this link for all of the available anime! https://docs.google.com/document/d/19YuCEnYsE74cYIs0yOhY4LvZIrjwUnYqHmJztUA0aGQ/edit?usp=sharing', ephemeral: true });
       const { anime, character, quote } = response.data[Math.floor(Math.random() * response.data.length)];
       await selection.reply(`
 **Anime:** *${anime}*
