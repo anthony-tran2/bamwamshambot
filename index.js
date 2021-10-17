@@ -3,7 +3,7 @@ dotenv.config();
 const { Client, Intents, Collection } = require('discord.js');
 const fs = require('fs');
 // const axios = require('axios');
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 client.commands = new Collection();
 
@@ -16,18 +16,22 @@ commandFiles.forEach(file => {
   client.commands.set(command.data.name, command);
 });
 
-for (const file of eventFiles) {
+eventFiles.forEach(file => {
   const event = require(`./events/${file}`);
   if (event.once) {
     client.once(event.name, (...args) => event.execute(...args));
   } else {
     client.on(event.name, (...args) => event.execute(...args));
   }
-}
+});
 
 client.on('interactionCreate', async interaction => {
-  if (!interaction.isCommand() || interaction.channelId !== '898815715920998400' || interaction.user.bot) return;
+  if (!interaction.isCommand() || interaction.user.bot) return;
   const command = client.commands.get(interaction.commandName);
+
+  if (interaction.channelId !== '898815715920998400') {
+    return await interaction.reply({ content: 'You can only use commands in the bot channel!', ephemeral: true });
+  }
 
   if (!command) return;
 
@@ -78,16 +82,7 @@ client.login(process.env.DISCORD_TOKEN);
 //       });
 //     }
 //   } else if (`${command} ${args[0].toLowerCase()}` === 'anime quote') {
-//     args.shift();
-//     if (args[0].toLowerCase() === 'random') {
-//       axios.get('https://animechan.vercel.app/api/random')
-//         .then(quote => {
-//           message.reply({
-//             content: `
-// Anime: ${quote.data.anime}
-// Character: ${quote.data.character}
-// ${quote.data.quote}
-//             `
+//
 //           });
 //         })
 //         .catch(err => console.error(err));
