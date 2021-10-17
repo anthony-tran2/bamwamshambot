@@ -31,7 +31,6 @@ module.exports = {
 `);
     } else if (selection.options._subcommand === 'random') {
       const response = await axios.get('https://animechan.vercel.app/api/random');
-      if (!response.status === 404) return await selection.reply({ content: 'There was an error getting the quote. Try again!', ephemeral: true });
       const { anime, character, quote } = response.data;
       await selection.reply(`
 **Anime:** *${anime}*
