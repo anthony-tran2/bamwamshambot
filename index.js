@@ -26,8 +26,7 @@ for (const file of eventFiles) {
 }
 
 client.on('interactionCreate', async interaction => {
-  if (!interaction.isCommand()) return;
-
+  if (!interaction.isCommand() || interaction.channelId !== '898815715920998400' || interaction.user.bot) return;
   const command = client.commands.get(interaction.commandName);
 
   if (!command) return;
